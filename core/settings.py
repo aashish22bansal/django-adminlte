@@ -15,6 +15,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 from str2bool import str2bool
 
+import dj_database_url
+
 load_dotenv()  # take environment variables from .env.
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,7 +35,7 @@ DEBUG = str2bool(os.environ.get('DEBUG'))
 #print(' DEBUG -> ' + str(DEBUG) ) 
 
 # Docker HOST
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")   #['*']
 
 # Add here your deployment HOSTS
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://localhost:5085', 'http://127.0.0.1:8000', 'http://127.0.0.1:5085']
@@ -119,6 +121,11 @@ else:
             'NAME': 'db.sqlite3',
         }
     }
+
+# Render Database External Connection URL: postgres://myportfolio_djago_render_user:DFQApoHjg8Bzi62o7EaBsOJoQpEEi4yg@dpg-cosh768l5elc738kg550-a.oregon-postgres.render.com/myportfolio_djago_render
+database_url = os.environ.get("DATABASE_URL")
+DATABASES["default"] = dj_database_url.parse(database_url)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
